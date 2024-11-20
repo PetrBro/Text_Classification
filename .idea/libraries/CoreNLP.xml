@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="CoreNLP">
+    <CLASSES>
+      <root url="file://$USER_HOME$/Desktop/CoreNLP" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$USER_HOME$/Desktop/CoreNLP" />
+    </SOURCES>
+    <jarDirectory url="file://$USER_HOME$/Desktop/CoreNLP" recursive="false" />
+    <jarDirectory url="file://$USER_HOME$/Desktop/CoreNLP" recursive="false" type="SOURCES" />
+  </library>
+</component>

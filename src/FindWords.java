@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import stemmer.porter.ru.StemmerPorterRU;
 
 
 public class FindWords {
@@ -55,5 +56,9 @@ public class FindWords {
     public static void main(String args[]){
         FindWords words = new FindWords("medical_topics.txt", "example.txt");
         words.Find_Same_Words();
+
+        String word = "чрезвычайно";
+
+        System.out.println(StemmerPorterRU.stem(word));
     }
 }

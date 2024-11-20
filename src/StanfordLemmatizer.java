@@ -62,7 +62,7 @@ public class StanfordLemmatizer {
 
     public static void main(String[] args) {
         System.out.println("Starting Stanford Lemmatizer");
-        String text = "How could you be seeing into my eyes like open doors? \n"+
+        String text = "Приветик, меня зовут Петя \n"+
                 "You led me down into my core where I've became so numb \n"+
                 "Without a soul my spirit's sleeping somewhere cold \n"+
                 "Until you find it there and led it back home \n"+
