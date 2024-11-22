@@ -5,14 +5,18 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class FindWords {
 
     String URL_topic;
     String URL_text;
-    ArrayList<String> words_in_topic_file;
-    StringBuilder words_in_text_file;
+    Map<String,Integer> words_in_topic_file = new HashMap<String,Integer>();;
+    StringBuilder text_file = new StringBuilder();
+    Integer Count_topic_words;
 
 
     public FindWords(String URL_topic, String URL_text){
@@ -20,6 +24,20 @@ public class FindWords {
         this.URL_text = URL_text;
     }
 
+    private String Stemming_word_or_words(String topic_word){
+        String[] topic_words = topic_word.split(" ");
+        if (topic_words.length >= 2){
+            for (int i = 0; i < topic_words.length; i++){
+                topic_words[i] = StemmerPorterRU.stem(topic_words[i].toLowerCase());
+            }
+            String topic_words_stemming = String.join(" ", topic_words);
+            return topic_words_stemming;
+        }
+        else {
+            topic_word = StemmerPorterRU.stem(topic_word);
+            return topic_word;
+        }
+    }
 
     private void Find_Same_Words_Download_Files() throws FileNotFoundException {
 
@@ -31,34 +49,17 @@ public class FindWords {
             throw new FileNotFoundException("Путь до файла с текстом не указан!");
         }
         else {
-
-            ArrayList<String> words_in_topic_file = new ArrayList<>();
-
             try (BufferedReader br = new BufferedReader(new FileReader(URL_topic))) {
                 String topic_word;
 
                 while ((topic_word = br.readLine()) != null) {
-                    String[] topic_words = topic_word.split(" ");
-                    if (topic_words.length >= 2){
-                        for (int i = 0; i < topic_words.length; i++){
-                            topic_words[i] = StemmerPorterRU.stem(topic_words[i].toLowerCase());
-                        }
-                        String topic_words_stemming = String.join(" ", topic_words);
-                        words_in_topic_file.add(topic_words_stemming);
-                    }
-                    else {
-                        topic_word = StemmerPorterRU.stem(topic_word);
-                        words_in_topic_file.add(topic_word.toLowerCase());
-                    }
+                    this.words_in_topic_file.put(topic_word.toLowerCase(), 0);
                 }
 
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-
-            StringBuilder words_in_text_file = new StringBuilder();
 
             try (BufferedReader br = new BufferedReader(new FileReader(URL_text))) {
                 String line;
@@ -69,48 +70,53 @@ public class FindWords {
                         words[i] = words[i].replaceAll("[\\pP\\s]", "").toLowerCase();
                         if (words[i].length() > 3) {
                             words[i] = StemmerPorterRU.stem(words[i]);
-                            words_in_text_file.append(words[i]);
-                            words_in_text_file.append(" ");
+                            this.text_file.append(words[i]);
+                            this.text_file.append(" ");
                         }
                     }
-                    words_in_text_file.append('\n');
+                    this.text_file.append('\n');
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            this.words_in_text_file = words_in_text_file;
-            this.words_in_topic_file = words_in_topic_file;
         }
     }
 
+    public int FindByString(String seq, StringBuilder text) {
+        List<Integer> indices = new ArrayList<Integer>();
+        int strIdx = 0;
 
-    public ArrayList<String> Find_Same_words() throws FileNotFoundException {
+        while ( strIdx < text.length() ) {
+            int idx = text.indexOf( seq, strIdx );
+            if ( idx == -1 )
+                break;
+            indices.add( idx );
+            strIdx = idx + seq.length();
+        }
+
+        return indices.size();
+    }
+
+    public Map<String,Integer> Find_Same_words() throws FileNotFoundException {
         Find_Same_Words_Download_Files();
 
-        System.out.println(words_in_topic_file);
+        for (String word : this.words_in_topic_file.keySet()) {
+            String stemming_word = Stemming_word_or_words(word);
+            int count_words = FindByString(stemming_word, this.text_file);
 
-        ArrayList<String> Array_of_topic_words = new ArrayList<>();
-
-        for (int i=0; i < words_in_topic_file.size(); i++){
-            String word = words_in_topic_file.get(i);
-
-            if (words_in_text_file.indexOf(String.valueOf(word)) != -1) {
-                Array_of_topic_words.add(word);
-            }
+            int count_words_in_text = this.words_in_topic_file.get(word);
+            count_words_in_text += count_words;
+            this.Count_topic_words += count_words;
+            this.words_in_topic_file.put(word, count_words_in_text);
         }
-        System.out.println(words_in_text_file);
-
-        return Array_of_topic_words;
+        return this.words_in_topic_file;
     }
 
-    public static void main(String[] args) throws FileNotFoundException {
-        FindWords words_medical_topic = new FindWords("src/Files_with_words_for_topics/medical_topics.txt", "src/Files_with_words_for_topics/example.txt");
-        ArrayList<String> array_medical_topic = words_medical_topic.Find_Same_words();
-        System.out.println(array_medical_topic.size());
-//        FindWords words_historical_topic = new FindWords("src/Files_with_words_for_topics/historical_topics.txt", "src/Files_with_words_for_topics/example.txt");
-//        ArrayList<String> array_historical_topic = words_historical_topic.Find_Same_words();
-//        System.out.println(array_historical_topic);
-//        System.out.println(array_medical_topic);
+    public float Return_Statistic(){
+        return Count_topic_words/(float)text_file.length();
     }
+
+//    public static void main(String[] args) throws FileNotFoundException {
+//
+//    }
 }

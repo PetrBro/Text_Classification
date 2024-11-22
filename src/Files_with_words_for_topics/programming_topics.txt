@@ -306,3 +306,59 @@ SSL-сертификаты
 падение производительности
 развернуть приложение
 репозиторий с открытым доступом
+Ember.js
+Svelte
+Backbone.js
+ASP.NET Core
+Flask RESTful
+GraphQL
+NestJS
+Phoenix
+.NET MAUI
+Matplotlib
+D3.js
+Beautiful Soup
+Three.js
+Axios
+Lodash
+Moment.js
+RxJS
+Alibaba Cloud
+IBM Cloud
+Vercel
+Netlify
+DigitalOcean App Platform
+Linode
+OpenShift
+VPN
+IDS (Intrusion Detection System)
+IPS (Intrusion Prevention System)
+DMZ (Demilitarized Zone)
+NAT (Network Address Translation)
+фишинг
+вредоносное ПО
+троянский вирус
+атаки нулевого дня
+шпионские программы
+Ransomware (вымогательское программное обеспечение)
+управление доступом
+сканирование уязвимостей
+система предотвращения вторжений (IPS)
+антивирусное программное обеспечение
+регулярные обновления
+бэкапы
+забить на баги
+через pull request
+выкатывать релиз
+откатить изменения
+бот для тестирования
+заблокировать пользователя
+разделить код на модули
+собрать проект
+скрипт для автоматизации
+сделать абстракцию
+победить рекурсивный вызов
+управлять состоянием приложения
+логировать ошибки
+зафиксировать версию
+вытянуть изменения

@@ -206,3 +206,33 @@ Palo Alto Networks
 Amazon AWS
 Google Cloud Platform
 Azure
+Figma
+Tailwind CSS
+Grafana
+Kubernetes
+Docker Compose
+RubyMotion
+Meteor.js
+Ionic
+Quasar Framework
+Symfony
+CSP (Content Security Policy)
+Certificate pinning
+Black box testing
+White box testing
+Защита от потери данных (DLP)
+Сниффинг (sniffing)
+Атака типа "человек посередине" (MitM)
+Защита от брутфорс-атак
+Контроль доступа на основе ролей (RBAC)
+Защита от утечек данных
+параллельная разработка
+шаблон проектирования
+миграция данных
+интеграция API
+организовать код
+настроить окружение
+выполнить тесты
+создать ветку
+разделить ответственность
+сделать ревью кода
