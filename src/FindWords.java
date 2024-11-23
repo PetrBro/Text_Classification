@@ -16,7 +16,7 @@ public class FindWords {
     String URL_text;
     Map<String,Integer> words_in_topic_file = new HashMap<String,Integer>();;
     StringBuilder text_file = new StringBuilder();
-    Integer Count_topic_words;
+    Integer Count_topic_words = 0;
 
 
     public FindWords(String URL_topic, String URL_text){
@@ -60,7 +60,6 @@ public class FindWords {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             try (BufferedReader br = new BufferedReader(new FileReader(URL_text))) {
                 String line;
 
@@ -85,7 +84,6 @@ public class FindWords {
     public int FindByString(String seq, StringBuilder text) {
         List<Integer> indices = new ArrayList<Integer>();
         int strIdx = 0;
-
         while ( strIdx < text.length() ) {
             int idx = text.indexOf( seq, strIdx );
             if ( idx == -1 )
@@ -106,14 +104,15 @@ public class FindWords {
 
             int count_words_in_text = this.words_in_topic_file.get(word);
             count_words_in_text += count_words;
-            this.Count_topic_words += count_words;
+            if(count_words != 0){this.Count_topic_words ++;};
             this.words_in_topic_file.put(word, count_words_in_text);
         }
         return this.words_in_topic_file;
     }
 
-    public float Return_Statistic(){
-        return Count_topic_words/(float)text_file.length();
+    public String Return_Statistic(){
+        System.out.println(Count_topic_words);
+        return Float.toString(Count_topic_words/(float)text_file.length() * 100);
     }
 
 //    public static void main(String[] args) throws FileNotFoundException {
