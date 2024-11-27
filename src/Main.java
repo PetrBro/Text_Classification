@@ -5,7 +5,6 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JOptionPane;
@@ -13,10 +12,9 @@ import javax.swing.JOptionPane;
 public class Main extends JFrame_Windows {
 
     protected static String MAIN_LINK = "src/Files_with_words_for_topics/";
-    public static Map<String, Map<String,Integer>> dictionary_for_statistic = new HashMap<String,Map<String,Integer>>();
+    public static Map<String, Map<String,Integer>> dictionary_for_statistic = new HashMap<>();
     public static FindWords Find_Words_In_Topic;
-    public static String [][] Array_for_statistic = new String[6][2];
-    private static final Map<String,String> dictionary = new HashMap<String,String>();
+    private static final Map<String,String> dictionary = new HashMap<>();
     private static final String[] array_of_topics = new String[] {"medical_topics", "historical_topics", " network_topics", "cryptography_topics", "finance_topics", "programming_topics"};
     private static final String[] array_of_topics_russian = new String[] {"Медицина", "История", "Сети", "Криптография", "Финансы", "Программирование"};
 
@@ -52,6 +50,27 @@ public class Main extends JFrame_Windows {
                     button_3.setVisible(true);
                     button_2.setVisible(true);
                     comboBox.setVisible(true);
+
+                    try(FileWriter writer = new FileWriter(Link_to_save_files + '/' + "Statistic.txt", false)){
+
+                        for (String elem : array_of_topics){
+                            Map<String,Integer> Dict_for_topic_words = dictionary_for_statistic.get(elem);
+                            writer.append(elem);
+                            writer.append('\n');
+                            writer.append('\n');
+                            for (String key : Dict_for_topic_words.keySet()){
+                                writer.append(key);
+                                writer.append(" ");
+                                String count_words = Integer.toString(Dict_for_topic_words.get(key));
+                                writer.append(count_words);
+                                writer.append('\n');
+                                writer.append('\n');
+                            }
+                        }
+                    }
+                    catch(IOException ex){
+                        System.out.println(ex.getMessage());
+                    }
                 }
                 catch (FileNotFoundException g){
                     JOptionPane.showMessageDialog(null, "Файл не найден!","Message", JOptionPane.ERROR_MESSAGE);
@@ -63,15 +82,8 @@ public class Main extends JFrame_Windows {
                 try {
                     String Choose_topic = (String) comboBox.getSelectedItem();
                     int index_for_topic = ArrayUtils.indexOf(array_of_topics, Choose_topic);
-                    int Count_not_zero_values = 0;
 
-                    Map<String,Integer> Dict_for_topic = dictionary_for_statistic.get(Choose_topic);
-                    for (String elem: Dict_for_topic.keySet()){
-                        if (Dict_for_topic.get(elem) != 0){
-                            Count_not_zero_values++;
-                        }
-                    }
-                    if(Count_not_zero_values != 0) {
+                    if(dictionary_for_statistic.get(Choose_topic) != null) {
                         JFrame frame = new JFrame("Гистограмма для темы: " + array_of_topics_russian[index_for_topic]);
                         HistogramVisualization histogram = new HistogramVisualization(dictionary_for_statistic.get(Choose_topic));
                         frame.setLayout(new BorderLayout());
@@ -112,11 +124,6 @@ public class Main extends JFrame_Windows {
     }
 
     public static void main(String[] args) {
-//        try {
-//            Find_Words("C:\\Users\\1111\\Downloads/example.txt");
-//        } catch (FileNotFoundException e) {
-//            throw new RuntimeException(e);
-//        }
         Main app = new Main();
         app.setVisible(true);
     }

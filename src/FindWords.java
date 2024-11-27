@@ -111,7 +111,6 @@ public class FindWords {
     }
 
     public String Return_Statistic(){
-        System.out.println(Count_topic_words);
         return Float.toString(Count_topic_words/(float)text_file.length() * 100);
     }
 
