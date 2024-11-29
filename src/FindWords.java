@@ -1,5 +1,6 @@
 import stemmer.porter.ru.StemmerPorterRU;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -14,7 +15,7 @@ public class FindWords {
 
     String URL_topic;
     String URL_text;
-    Map<String,Integer> words_in_topic_file = new HashMap<String,Integer>();;
+    Map<String,Integer> words_in_topic_file = new HashMap<>();
     StringBuilder text_file = new StringBuilder();
     Integer Count_topic_words = 0;
 
@@ -30,8 +31,8 @@ public class FindWords {
             for (int i = 0; i < topic_words.length; i++){
                 topic_words[i] = StemmerPorterRU.stem(topic_words[i].toLowerCase());
             }
-            String topic_words_stemming = String.join(" ", topic_words);
-            return topic_words_stemming;
+
+            return String.join(" ", topic_words);
         }
         else {
             topic_word = StemmerPorterRU.stem(topic_word);
@@ -58,7 +59,7 @@ public class FindWords {
 
 
             } catch (IOException e) {
-                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Ошибка в открытии файла!","Message", JOptionPane.ERROR_MESSAGE);
             }
             try (BufferedReader br = new BufferedReader(new FileReader(URL_text))) {
                 String line;
@@ -76,13 +77,13 @@ public class FindWords {
                     this.text_file.append('\n');
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Ошибка в открытии файла! Проверьте путь к файлу!","Message", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
     public int FindByString(String seq, StringBuilder text) {
-        List<Integer> indices = new ArrayList<Integer>();
+        List<Integer> indices = new ArrayList<>();
         int strIdx = 0;
         while ( strIdx < text.length() ) {
             int idx = text.indexOf( seq, strIdx );
@@ -104,7 +105,7 @@ public class FindWords {
 
             int count_words_in_text = this.words_in_topic_file.get(word);
             count_words_in_text += count_words;
-            if(count_words != 0){this.Count_topic_words ++;};
+            if(count_words != 0){this.Count_topic_words ++;}
             this.words_in_topic_file.put(word, count_words_in_text);
         }
         return this.words_in_topic_file;
@@ -114,7 +115,4 @@ public class FindWords {
         return Float.toString(Count_topic_words/(float)text_file.length() * 100);
     }
 
-//    public static void main(String[] args) throws FileNotFoundException {
-//
-//    }
 }

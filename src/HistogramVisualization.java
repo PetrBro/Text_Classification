@@ -1,12 +1,9 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 public class HistogramVisualization extends JPanel {
@@ -126,7 +123,7 @@ public class HistogramVisualization extends JPanel {
             ImageIO.write(image, "jpg", new File(filePath)); // Сохраняем изображение
             System.out.println("График сохранен в: " + filePath);
         } catch (IOException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Ошибка в сохранении картинки! Проверьте путь к директории!","Message", JOptionPane.ERROR_MESSAGE);
         }
     }
 

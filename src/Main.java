@@ -1,7 +1,5 @@
 import edu.stanford.nlp.util.ArrayUtils;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.*;
 import javax.swing.*;
 import java.awt.*;
@@ -38,88 +36,75 @@ public class Main extends JFrame_Windows {
 
     @Override
     public void initListeners() {
-        button_1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                Link_to_file = textfield1.getText();
-                Link_to_save_files = textfield2.getText();
-                System.out.println(Link_to_file);
-                try {
-                    new BufferedReader(new FileReader(Link_to_file));
-                    Find_Words(Link_to_file);
+        button_1.addActionListener(_ -> {
+            Link_to_file = textfield1.getText();
+            Link_to_save_files = textfield2.getText();
+            try {
+                Find_Words(Link_to_file);
 
-                    button_3.setVisible(true);
-                    button_2.setVisible(true);
-                    comboBox.setVisible(true);
+                button_3.setVisible(true);
+                button_2.setVisible(true);
+                comboBox.setVisible(true);
 
-                    try(FileWriter writer = new FileWriter(Link_to_save_files + '/' + "Statistic.txt", false)){
+                try(FileWriter writer = new FileWriter(Link_to_save_files + '/' + "Statistic.txt", false)){
 
-                        for (String elem : array_of_topics){
-                            Map<String,Integer> Dict_for_topic_words = dictionary_for_statistic.get(elem);
-                            writer.append(elem);
+                    for (String elem : array_of_topics){
+                        Map<String,Integer> Dict_for_topic_words = dictionary_for_statistic.get(elem);
+                        writer.append(elem);
+                        writer.append('\n');
+                        writer.append('\n');
+                        for (String key : Dict_for_topic_words.keySet()){
+                            writer.append(key);
+                            writer.append(" ");
+                            String count_words = Integer.toString(Dict_for_topic_words.get(key));
+                            writer.append(count_words);
                             writer.append('\n');
                             writer.append('\n');
-                            for (String key : Dict_for_topic_words.keySet()){
-                                writer.append(key);
-                                writer.append(" ");
-                                String count_words = Integer.toString(Dict_for_topic_words.get(key));
-                                writer.append(count_words);
-                                writer.append('\n');
-                                writer.append('\n');
-                            }
                         }
                     }
-                    catch(IOException ex){
-                        System.out.println(ex.getMessage());
-                    }
                 }
-                catch (FileNotFoundException g){
-                    JOptionPane.showMessageDialog(null, "Файл не найден!","Message", JOptionPane.ERROR_MESSAGE);
+                catch(IOException ex){
+                    System.out.println(ex.getMessage());
                 }
+            }
+            catch (FileNotFoundException g){
+                JOptionPane.showMessageDialog(null, "Файл не найден!","Message", JOptionPane.ERROR_MESSAGE);
             }
         });
-        button_2.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    String Choose_topic = (String) comboBox.getSelectedItem();
-                    int index_for_topic = ArrayUtils.indexOf(array_of_topics, Choose_topic);
+        button_2.addActionListener(_ -> {
+            try {
+                String Choose_topic = (String) comboBox.getSelectedItem();
+                int index_for_topic = ArrayUtils.indexOf(array_of_topics, Choose_topic);
 
-                    if(dictionary_for_statistic.get(Choose_topic) != null) {
-                        JFrame frame = new JFrame("Гистограмма для темы: " + array_of_topics_russian[index_for_topic]);
-                        HistogramVisualization histogram = new HistogramVisualization(dictionary_for_statistic.get(Choose_topic), frame.getHeight());
-                        frame.setLayout(new BorderLayout());
+                if(dictionary_for_statistic.get(Choose_topic) != null) {
+                    JFrame frame = new JFrame("Гистограмма для темы: " + array_of_topics_russian[index_for_topic]);
+                    HistogramVisualization histogram = new HistogramVisualization(dictionary_for_statistic.get(Choose_topic), frame.getHeight());
+                    frame.setLayout(new BorderLayout());
 
-                        // Создаем кнопку для сохранения графика
-                        JButton saveButton = new JButton("Сохранить график в JPG");
-                        saveButton.addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                histogram.saveToJPG(Link_to_save_files + "/" + "histogram.jpg");
-                            }
-                        });
+                    // Создаем кнопку для сохранения графика
+                    JButton saveButton = new JButton("Сохранить график в JPG");
+                    saveButton.addActionListener(_ -> histogram.saveToJPG(Link_to_save_files + "/" + "histogram.jpg"));
 
-                        // Добавляем компонент на фрейм
-                        frame.add(histogram, BorderLayout.CENTER);
-                        frame.add(saveButton, BorderLayout.SOUTH); // Кнопка снизу
+                    // Добавляем компонент на фрейм
+                    frame.add(histogram, BorderLayout.CENTER);
+                    frame.add(saveButton, BorderLayout.SOUTH); // Кнопка снизу
 
-                        frame.setSize(500, 400); // Увеличиваем размер окна
-                        frame.setVisible(true);
-                    }
-                    else{
-                        JOptionPane.showMessageDialog(null, "В тексте не найдены слова, относящиеся к данной тематике!","Message", JOptionPane.ERROR_MESSAGE);
-                    }
+                    frame.setSize(500, 400); // Увеличиваем размер окна
+                    frame.setVisible(true);
                 }
-                catch (Exception g){
-                    g.printStackTrace();
+                else{
+                    JOptionPane.showMessageDialog(null, "В тексте не найдены слова, относящиеся к данной тематике!","Message", JOptionPane.ERROR_MESSAGE);
                 }
+            }
+            catch (Exception g){
+                JOptionPane.showMessageDialog(null, "Возникла непредвиденная ошибка!","Message", JOptionPane.ERROR_MESSAGE);
             }
         });
-        button_3.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JFrame frame_2 = new JFrame("Таблица результатов");
-                frame_2.setSize(250, 135);
-                frame_2.add(table);
-                frame_2.setVisible(true);
-            }
+        button_3.addActionListener(_ -> {
+            JFrame frame_2 = new JFrame("Таблица результатов");
+            frame_2.setSize(250, 135);
+            frame_2.add(table);
+            frame_2.setVisible(true);
         });
     }
 
