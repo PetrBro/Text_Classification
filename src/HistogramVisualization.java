@@ -11,10 +11,13 @@ import java.util.Map;
 
 public class HistogramVisualization extends JPanel {
 
-    private Map<String, Integer> data;
+    private final Map<String, Integer> data;
+    public int nonZeroCount;
+    public int Interface_height;
 
-    public HistogramVisualization(Map<String, Integer> data) {
+    public HistogramVisualization(Map<String, Integer> data, int Interface_height) {
         this.data = data;
+        this.Interface_height = Interface_height;
         setPreferredSize(new Dimension(500, 300)); // Установка предпочтительного размера для компонента
     }
 
@@ -23,9 +26,12 @@ public class HistogramVisualization extends JPanel {
         super.paintComponent(g);
 
         int maxHeight = getMaxHeight(); // Получаем максимальное значение из словаря
-        int nonZeroCount = countNonZeroValues();
-        int barWidth = (getWidth() - 40) / nonZeroCount; // Расчет ширины столбца с учетом только ненулевых значений
+        nonZeroCount = countNonZeroValues();
 
+        int barWidth = 40;
+        if (nonZeroCount > 7){
+            barWidth = (getWidth() - 40) / nonZeroCount; // Расчет ширины столбца с учетом только ненулевых значений
+        }
         // Рисуем сетку с подписями
         drawGrid(g, maxHeight);
 
@@ -38,9 +44,13 @@ public class HistogramVisualization extends JPanel {
             if (value == 0) {
                 continue;
             }
-
-            // Нормируем высоту столбца по максимальному значению
-            int height = (int) ((double) value / maxHeight * (getHeight() - 25)); // Максимальная высота - 40 для оси X и 30 для сетки
+            int height;
+            if (maxHeight >= 5) {
+                height = (int) ((double) value / maxHeight * (getHeight() - 70)); // Максимальная высота - 40 для оси X и 30 для сетки
+            }
+            else {
+                height = (int) ((double) value / maxHeight * (getHeight() - 70) / 2);
+            }
             int yPosition = getHeight() - height - 40; // Позиция Y для рисования столбца
 
             // Устанавливаем цвет и рисуем столбец
@@ -56,20 +66,36 @@ public class HistogramVisualization extends JPanel {
 
     private void drawGrid(Graphics g, int maxHeight) {
         g.setColor(Color.LIGHT_GRAY);
-        int step = (getHeight() - 40) / 10; // Шаг для рисования сетки, учитываем место для оси X
-
+        int step = (int) Math.ceil(maxHeight / 10.0); // Шаг для рисования сетки
+        System.out.println(step);
         // Рисуем горизонтальные линии и их значения
-        for (int i = 0; i <= 10; i++) {
-            int y = getHeight() - 40 - (int) ((i / 10.0) * (getHeight() - 40)); // Обратный порядок для чисел
-            if (y < 0) continue; // Не рисуем линии выше области видимости
 
-            g.drawLine(20, y, getWidth() - 20, y); // Рисуем линию
+        if (maxHeight >= 5) {
+            for (int i = 0; i <= 10; i++) {
+                int value = step * i;
+                if (value > maxHeight) continue; // Не рисуем линии выше максимума
+                int y = getHeight() - 40 - (int) ((double) value / maxHeight * (getHeight() - 70)); // Позиция Y в зависимости от значения
 
-            // Выводим числовые значения сбоку от графика
-            int value = (int) ((maxHeight / 10.0) * i);
-            g.drawString(String.valueOf(value), 5, y + 5); // Положение текста
+                g.drawLine(20, y, getWidth() - 20, y); // Рисуем линию
+
+                // Выводим числовые значения сбоку от графика
+                g.drawString(String.valueOf(value), 5, y + 5); // Положение текста
+            }
         }
+        else {
+            for (int i = 0; i <= 10; i++) {
+                int value = step * i;
 
+                if (value > 10) continue;  // Не рисуем линии выше максимума
+
+                int y = getHeight() - 40 - (int) ((double) value / maxHeight * (getHeight() - 70) / 2); // Позиция Y в зависимости от значения
+
+                g.drawLine(20, y, getWidth() - 20, y); // Рисуем линию
+
+                // Выводим числовые значения сбоку от графика
+                g.drawString(String.valueOf(value), 5, y + 5); // Положение текста
+            }
+        }
         // Рисуем ось X
         g.drawLine(20, getHeight() - 40, getWidth() - 20, getHeight() - 40); // Ось X
     }
@@ -104,20 +130,15 @@ public class HistogramVisualization extends JPanel {
         }
     }
 
-    public static void main(String[] args) {
+//    public static void main(String[] args) {
 //        HashMap<String, Integer> data = new HashMap<>();
 //        // Вы можете добавлять, обновлять или изменять значения в словаре
-//        data.put("A", 5);
-//        data.put("B", 0);
-//        data.put("C", 15);
-//        data.put("D", 0);
-//        data.put("E", 12);
-//        data.put("F", 3);
-//        data.put("G", 7);
-//        data.put("H", 10);
+//        data.put("A", 1);
+//        data.put("B", 100);
+//
 //
 //        JFrame frame = new JFrame("Гистограмма с сеткой и подписями");
-//        HistogramVisualization histogram = new HistogramVisualization(data);
+//        HistogramVisualization histogram = new HistogramVisualization(data, frame.getHeight());
 //        frame.setLayout(new BorderLayout());
 //        frame.add(histogram, BorderLayout.CENTER);
 //
@@ -136,5 +157,5 @@ public class HistogramVisualization extends JPanel {
 //        frame.setSize(500, 400);
 //        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //        frame.setVisible(true);
-    }
+//    }
 }

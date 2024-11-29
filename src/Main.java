@@ -85,7 +85,7 @@ public class Main extends JFrame_Windows {
 
                     if(dictionary_for_statistic.get(Choose_topic) != null) {
                         JFrame frame = new JFrame("Гистограмма для темы: " + array_of_topics_russian[index_for_topic]);
-                        HistogramVisualization histogram = new HistogramVisualization(dictionary_for_statistic.get(Choose_topic));
+                        HistogramVisualization histogram = new HistogramVisualization(dictionary_for_statistic.get(Choose_topic), frame.getHeight());
                         frame.setLayout(new BorderLayout());
 
                         // Создаем кнопку для сохранения графика
